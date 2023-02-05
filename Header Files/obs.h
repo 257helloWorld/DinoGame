@@ -59,7 +59,7 @@ void clr_obs_g1(int x, int y) {
 
 // Obstacle Group: 2
 void obs_g2(int x, int y) {
-	obs1(x,y);
+	obs2(x,y);
 }
 void clr_obs_g2(int x, int y) {
 	setcolor(BLACK);

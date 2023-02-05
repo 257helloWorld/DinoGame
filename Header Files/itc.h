@@ -502,7 +502,7 @@ char* score_char(int n) {
 		case 498: a="000498"; break;
 		case 499: a="000499"; break;
 		case 500: a="000500"; break;
-		default: a="You are a pro!"; break;
+		default: a="You are pro!"; break;
 	}
 	return a;
 }

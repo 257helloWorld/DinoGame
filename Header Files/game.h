@@ -1,4 +1,4 @@
-#include<scene1.h>
+#include<desktop.h>
 
 
 // Variables
@@ -46,6 +46,7 @@ void clr_random_obs(int x, int y, int cur_obs) {
 int start_game();
 
 void game_over() {
+	score = 0;
 	setcolor(LIGHTGRAY);
 	outtextxy(getmaxx()/2-45,getmaxy()/2-30,"Game Over");
 	setcolor(WHITE);
@@ -79,7 +80,7 @@ int start_game() {
 	int x = 132, y = 260;
 	int line_x = 132+60, line_y = 260;
 	
-	int boundX1 = 148, boundX2 = 480;
+	int bound_x1 = 148, bound_x2 = 480;
 	
 	int dino_x = x+50, dino_y = y;
 	int jump_y = 186;
@@ -100,6 +101,7 @@ int start_game() {
 	int d_b = 0;
 	int d_c = 0;
 	int d_d = 0;
+	int d_e = 0;
 	// Initial Jump
 	while(dino_y > jump_y) {
 		clr_dino(dino_x,dino_y);
@@ -154,7 +156,7 @@ int start_game() {
 			dino(dino_x,dino_y);
 		}
 		
-		// Extending Line Furst Time.
+		// Extending Line First Time.
 		if(line_x <= 480) {
 			putpixel(line_x,line_y,WHITE);
 			line_x++;
@@ -171,41 +173,42 @@ int start_game() {
 			outtextxy(getmaxx()/2+100,getmaxy()/2-100,c_score);
 		}
 		
-		// Obstacles Movement 1.
+		// Obstacles Movement.
 		if(d_b == 2) {
-			if(obs1_x < boundX2) { clr_random_obs(obs1_x,obs1_y,cur_obs1); }
-			if(obs2_x < boundX2) { clr_random_obs(obs2_x,obs2_y,cur_obs2); }
-			if(obs3_x < boundX2) { clr_random_obs(obs3_x,obs3_y,cur_obs3); }
-			obs1_x -= 3;
-			obs2_x -= 3;
-			obs3_x -= 3;
-			last_x -= 3;
-			if(obs1_x < boundX2) { random_obs(obs1_x,obs1_y,cur_obs1); }
-			if(obs2_x < boundX2) { random_obs(obs2_x,obs2_y,cur_obs2); }
-			if(obs3_x < boundX2) { random_obs(obs3_x,obs3_y,cur_obs3); }
+			if(obs1_x < bound_x2) { clr_random_obs(obs1_x,obs1_y,cur_obs1); }
+			if(obs2_x < bound_x2) { clr_random_obs(obs2_x,obs2_y,cur_obs2); }
+			if(obs3_x < bound_x2) { clr_random_obs(obs3_x,obs3_y,cur_obs3); }
+			obs1_x -= 2;
+			obs2_x -= 2;
+			obs3_x -= 2;
+			last_x -= 2;
+			if(obs1_x < bound_x2) { random_obs(obs1_x,obs1_y,cur_obs1); }
+			if(obs2_x < bound_x2) { random_obs(obs2_x,obs2_y,cur_obs2); }
+			if(obs3_x < bound_x2) { random_obs(obs3_x,obs3_y,cur_obs3); }
 			window();
 			
 		}
 		
+		if(obs1_x > obs2_x && obs1_x > obs3_x) { last_x = obs1_x; }
+		else if(obs2_x > obs1_x && obs2_x > obs3_x) { last_x = obs2_x; }
+		else if(obs3_x > obs1_x && obs3_x > obs2_x) { last_x = obs3_x; }
+		
 		// Assign random distance values to the obstalces.
-		if(obs1_x < boundX1) {
+		if(obs1_x < bound_x1) {
 			clr_random_obs(obs1_x,obs1_y,cur_obs1);
 			obs1_x = last_x + random_distance();
-			last_x = obs1_x;
 			cur_obs1 = random_obs_no();
 		
 		}
-		if(obs2_x < boundX1) {
+		if(obs2_x < bound_x1) {
 			clr_random_obs(obs2_x,obs2_y,cur_obs2);
 			obs2_x = last_x + random_distance();
-			last_x = obs2_x;
 			cur_obs2 = random_obs_no();
 		
 		}
-		if(obs3_x < boundX1) {
+		if(obs3_x < bound_x1) {
 			clr_random_obs(obs3_x,obs3_y,cur_obs3);
 			obs3_x = last_x + random_distance();
-			last_x = obs3_x;
 			cur_obs3 = random_obs_no();
 		
 		}
@@ -221,15 +224,15 @@ int start_game() {
 		
 		
 		// Collision Detection.
-		if(dino_x > obs1_x-2 && dino_x < obs1_x+1 && dino_y > obs1_y-20 && obs1_x > boundX1) {	
+		if(dino_x > obs1_x-2 && dino_x < obs1_x+1 && dino_y > obs1_y-20 && obs1_x > bound_x1) {	
 			game_over();	
 			return 1;
 		}
-		else if(dino_x > obs2_x-2 && dino_x < obs2_x+1 && dino_y > obs2_y-20 && obs2_x > boundX1) {
+		if(dino_x > obs2_x-2 && dino_x < obs2_x+1 && dino_y > obs2_y-20 && obs2_x > bound_x1) {
 			game_over();
 			return 1;
 		}
-		else if(dino_x > obs3_x-2 && dino_x < obs3_x+1 && dino_y > obs3_y-20 && obs3_x > boundX1) {
+		if(dino_x > obs3_x-2 && dino_x < obs3_x+1 && dino_y > obs3_y-20 && obs3_x > bound_x1) {
 			game_over();
 			return 1;
 		}
@@ -254,8 +257,8 @@ int start_game() {
 		}
 		
 		
-		// Clear old dino.
-		if(t_x != dino_x || t_y != dino_y) {
+		// Redraw dino
+		if(t_x != dino_x || t_y != dino_y || d_e == 1) {
 			clr_dino(t_x,t_y);
 			dino(dino_x,dino_y);
 		}
@@ -266,10 +269,12 @@ int start_game() {
 		d_b++;
 		d_c++;
 		d_d++;
+		d_e++;
 		if(d_a == 3) { d_a = 0; }
 		if(d_b == 6) { d_b = 0; }
 		if(d_c == 10) { d_c = 0; }
 		if(d_d == 101) { d_d = 0; }
+		if(d_e == 50) { d_e = 0; }
 		delay(1);
 	}
 }
