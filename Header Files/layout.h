@@ -120,15 +120,15 @@ void google() {
 
 void search_bar() {
 	for(int x = 160; x < 480; x++) {
-		circle(x,320,14);
+		circle(x,310,14);
 	}
 	setcolor(BLACK);
 	for(int y = 160; y < 480; y++) {
-		circle(y,320,13);
+		circle(y,310,13);
 	}
 	setcolor(WHITE);
-	circle(480-10,318,5);
-	line(475,323,478,326);
+	circle(480-10,308,5);
+	line(475,313,478,316);
 }
 void search_button() {
 	setcolor(WHITE);

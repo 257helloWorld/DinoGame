@@ -6,8 +6,26 @@ int cur_obs1, cur_obs2, cur_obs3;
 int obs1_x, obs1_y, obs2_x, obs2_y, obs3_x, obs3_y;
 int last_x;
 int score = 0;
+int h_score = 0;
 int b, c;
 char* c_score = score_char(score);
+char* c_h_score = score_char(h_score);
+
+int getLength(int obs_no) {
+	if(obs_no == 1) { return 10; }
+	if(obs_no == 2) { return 16; }
+	if(obs_no == 3) { return 25; }
+	if(obs_no == 4) { return 32; }
+	if(obs_no == 5) { return 36; }
+}
+
+int getHeight(int obs_no) {
+	if(obs_no == 1) { return 7; }
+	if(obs_no == 2) { return 20; }
+	if(obs_no == 3) { return 7; }
+	if(obs_no == 4) { return 20; }
+	if(obs_no == 5) { return 20; }
+}
 
 int random_obs_no() {
 	return rand()%5+1;
@@ -46,6 +64,7 @@ void clr_random_obs(int x, int y, int cur_obs) {
 int start_game();
 
 void game_over() {
+	if(h_score < score) { h_score = score; }
 	score = 0;
 	setcolor(LIGHTGRAY);
 	outtextxy(getmaxx()/2-45,getmaxy()/2-30,"Game Over");
@@ -83,7 +102,8 @@ int start_game() {
 	int bound_x1 = 148, bound_x2 = 480;
 	
 	int dino_x = x+50, dino_y = y;
-	int jump_y = 186;
+	//int jump_y = 186;
+	int jump_y = 180;
 	
 	obs1_x = 800;
 	obs1_y = 250;
@@ -117,6 +137,11 @@ int start_game() {
 		line(x+20,y,x+60,y);
 		delay(2);
 	}
+	
+	// Highest score
+	outtextxy(getmaxx()/2+28,getmaxy()/2-100,"HI");
+	c_h_score = score_char(h_score);
+	outtextxy(getmaxx()/2+45,getmaxy()/2-100,c_h_score);
 	
 	
 	while(1) {
@@ -178,10 +203,10 @@ int start_game() {
 			if(obs1_x < bound_x2) { clr_random_obs(obs1_x,obs1_y,cur_obs1); }
 			if(obs2_x < bound_x2) { clr_random_obs(obs2_x,obs2_y,cur_obs2); }
 			if(obs3_x < bound_x2) { clr_random_obs(obs3_x,obs3_y,cur_obs3); }
-			obs1_x -= 2;
-			obs2_x -= 2;
-			obs3_x -= 2;
-			last_x -= 2;
+			obs1_x -= 3;
+			obs2_x -= 3;
+			obs3_x -= 3;
+			last_x -= 3;
 			if(obs1_x < bound_x2) { random_obs(obs1_x,obs1_y,cur_obs1); }
 			if(obs2_x < bound_x2) { random_obs(obs2_x,obs2_y,cur_obs2); }
 			if(obs3_x < bound_x2) { random_obs(obs3_x,obs3_y,cur_obs3); }
@@ -224,15 +249,18 @@ int start_game() {
 		
 		
 		// Collision Detection.
-		if(dino_x > obs1_x-2 && dino_x < obs1_x+1 && dino_y > obs1_y-20 && obs1_x > bound_x1) {	
+		if((dino_x > obs1_x-5) && (dino_x-15 < obs1_x+getLength(cur_obs1)) && 
+		   (dino_y > obs1_y - getHeight(cur_obs1))) {	
 			game_over();	
 			return 1;
 		}
-		if(dino_x > obs2_x-2 && dino_x < obs2_x+1 && dino_y > obs2_y-20 && obs2_x > bound_x1) {
-			game_over();
+		if((dino_x > obs2_x-5) && (dino_x-15 < obs2_x+getLength(cur_obs2)) && 
+		   (dino_y > obs2_y - getHeight(cur_obs2))) {
+		   	game_over();
 			return 1;
 		}
-		if(dino_x > obs3_x-2 && dino_x < obs3_x+1 && dino_y > obs3_y-20 && obs3_x > bound_x1) {
+		if((dino_x > obs3_x-5) && (dino_x-15 < obs3_x+getLength(cur_obs3)) && 
+		   (dino_y > obs3_y - getHeight(cur_obs3))) {
 			game_over();
 			return 1;
 		}
@@ -271,7 +299,7 @@ int start_game() {
 		d_d++;
 		d_e++;
 		if(d_a == 3) { d_a = 0; }
-		if(d_b == 6) { d_b = 0; }
+		if(d_b == 5) { d_b = 0; }
 		if(d_c == 10) { d_c = 0; }
 		if(d_d == 101) { d_d = 0; }
 		if(d_e == 50) { d_e = 0; }
